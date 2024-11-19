@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Page d'accueil de votre site web.">
+    <title>Page d'Accueil</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Lien vers un fichier CSS externe si nécessaire -->
+    <script src="script.js" defer></script> <!-- Lien vers un fichier JavaScript externe si nécessaire -->
+</head>
+<body>
+
+    <!-- En-tête -->
+    <header>
+        <div class="container">
+            <h1>Bienvenue sur notre site web !</h1>
+            <p>Votre slogan ou une petite phrase d'accroche ici.</p>
+        </div>
+    </header>
+
+    <!-- Barre de navigation -->
+    <nav>
+        <ul>
+            <li><a href="#accueil">Accueil</a></li>
+            <li><a href="#services">Nos services</a></li>
+            <li><a href="#apropos">À propos</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Section principale -->
+    <main id="accueil">
+        <section>
+            <h2>Nos services</h2>
+            <p>Découvrez ce que nous pouvons faire pour vous !</p>
+            <div class="service">
+                <h3>Service 1</h3>
+                <p>Description du service 1.</p>
+            </div>
+            <div class="service">
+                <h3>Service 2</h3>
+                <p>Description du service 2.</p>
+            </div>
+        </section>
+
+        <section id="apropos">
+            <h2>À propos de nous</h2>
+            <p>Nous sommes une entreprise passionnée par notre travail et dédiée à offrir les meilleurs services à nos clients.</p>
+        </section>
+
+        <section id="contact">
+            <h2>Contactez-nous</h2>
+            <form action="envoyer.php" method="post">
+                <label for="nom">Nom :</label>
+                <input type="text" id="nom" name="nom" required>
+                <label for="email">Email :</label>
+                <input type="email" id="email" name="email" required>
+                <label for="message">Message :</label>
+                <textarea id="message" name="message" rows="4" required></textarea>
+                <button type="submit">Envoyer</button>
+            </form>
+        </section>
+    </main>
+
+    <!-- Pied de page -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Votre Entreprise. Tous droits réservés.</p>
+            <p><a href="#privacy-policy">Politique de confidentialité</a> | <a href="#terms">Conditions d'utilisation</a></p>
+        </div>
+    </footer>
+
+</body>
+</html>
