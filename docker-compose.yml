@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  frontend:
+    image: nginx:latest  # Utilise l'image officielle de Nginx pour servir les fichiers HTML/CSS/JS
+    ports:
+      - "8080:80"  # Le port 80 du conteneur est accessible via le port 8080 sur la machine hôte
+    volumes:
+      - ./frontend:/usr/share/nginx/html  # Monte le dossier frontend de la machine hôte dans le conteneur
+    networks:
+      - hackathon_network  # Connecte le conteneur au réseau hackathon_network
+
+  backend:
+    build: ./backend  # Construit une image personnalisée pour le backend à partir du Dockerfile dans le dossier backend
+    ports:
+      - "5000:5000"  # Expose le port 5000 du conteneur sur la machine hôte
+    depends_on:
+      - db  # Attend que le service db démarre avant de se lancer
+    volumes:
+      - ./backend:/app  # Partage le code source du backend entre la machine hôte et le conteneur
+    networks:
+      - hackathon_network  # Connecte le backend au réseau hackathon_network
+
+  db:
+    image: mariadb  # Utilise l'image officielle de MariaDB pour la base de données
+    environment:
+      MYSQL_ROOT_PASSWORD: root  # Définit le mot de passe pour l'utilisateur root
+      MYSQL_DATABASE: hackathon  # Crée la base de données hackathon au démarrage
+    ports:
+      - "3307:3306"  # Expose le port 3306 (par défaut pour MariaDB) sur la machine hôte
+    volumes:
+      - db_data:/var/lib/mysql  # Stocke les données de la base dans le volume nommé db_data
+    networks:
+      - hackathon_network  # Connecte la base de données au réseau hackathon_network
+
+volumes:
+  db_data:  # Déclare un volume Docker persistant pour stocker les données de la base de données
+
+networks:
+  hackathon_network:  # Déclare un réseau Docker pour permettre aux conteneurs de communiquer entre eux
