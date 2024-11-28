@@ -23,9 +23,8 @@ services:
 
   db:
     image: mariadb  # Utilise l'image officielle de MariaDB pour la base de données
-    environment:
-      MYSQL_ROOT_PASSWORD: root  # Définit le mot de passe pour l'utilisateur root
-      MYSQL_DATABASE: hackathon  # Crée la base de données hackathon au démarrage
+    env_file:
+      - .env  # Utilise le fichier .env pour les variables d'environnement
     ports:
       - "3307:3306"  # Expose le port 3306 (par défaut pour MariaDB) sur la machine hôte
     volumes:
