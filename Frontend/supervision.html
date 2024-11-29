@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Supervision et Configuration</title>
+  <!-- Lien vers Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Lien vers Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .chart-container {
+      position: relative;
+      margin: 20px 0;
+      height: 400px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="bg-primary text-white text-center py-4">
+    <h1>Application de Supervision</h1>
+    <p>Configuration et supervision des données en temps réel</p>
+  </header>
+
+  <div class="container my-5">
+    <!-- Section 1: Configuration des paramètres -->
+    <div class="section">
+      <h2>Configuration des paramètres</h2>
+      <form id="configForm">
+        <div class="mb-3">
+          <label for="variableName" class="form-label">Nom de la variable</label>
+          <input type="text" class="form-control" id="variableName" placeholder="Exemple : Température">
+        </div>
+        <div class="mb-3">
+          <label for="ipAddress" class="form-label">Adresse IP de l'automate</label>
+          <input type="text" class="form-control" id="ipAddress" placeholder="Exemple : 192.168.0.10">
+        </div>
+        <div class="mb-3">
+          <label for="variableToRead" class="form-label">Variable à lire</label>
+          <input type="text" class="form-control" id="variableToRead" placeholder="Exemple : sensor_1">
+        </div>
+        <div class="mb-3">
+          <label for="frequency" class="form-label">Fréquence d'enregistrement (en secondes)</label>
+          <input type="number" class="form-control" id="frequency" placeholder="Exemple : 5">
+        </div>
+        <button type="button" class="btn btn-primary" onclick="saveConfiguration()">Sauvegarder les paramètres</button>
+      </form>
+    </div>
+
+    <!-- Section 2: Supervision en temps réel -->
+    <div class="section mt-5">
+      <h2>Supervision en temps réel</h2>
+      <div class="chart-container">
+        <canvas id="realtimeChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Section 3: Consultation des données historiques -->
+    <div class="section mt-5">
+      <h2>Consultation des données historiques</h2>
+      <form id="exportForm">
+        <div class="mb-3">
+          <label for="startDate" class="form-label">Date de début</label>
+          <input type="date" class="form-control" id="startDate">
+        </div>
+        <div class="mb-3">
+          <label for="endDate" class="form-label">Date de fin</label>
+          <input type="date" class="form-control" id="endDate">
+        </div>
+        <button type="button" class="btn btn-success" onclick="exportData()">Exporter les données (CSV)</button>
+      </form>
+      <table class="table table-bordered mt-3">
+        <thead>
+          <tr>
+            <th>Variable</th>
+            <th>Valeur</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody id="historicalData">
+          <!-- Les données historiques seront ajoutées ici dynamiquement -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Lien vers Bootstrap 5 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Simuler les données pour le graphique
+    const data = {
+      labels: [],
+      datasets: [{
+        label: 'Données en temps réel',
+        backgroundColor: 'rgba(0, 120, 212, 0.5)',
+        borderColor: 'rgba(0, 120, 212, 1)',
+        data: []
+      }]
+    };
+
+    // Configuration du graphique en temps réel
+    const ctx = document.getElementById('realtimeChart').getContext('2d');
+    const realtimeChart = new Chart(ctx, {
+      type: 'line',
+      data: data,
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            display: true
+          }
+        },
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Temps'
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Valeur'
+            }
+          }
+        }
+      }
+    });
+
+    // Simuler les mises à jour en temps réel
+    setInterval(() => {
+      const now = new Date().toLocaleTimeString();
+      const randomValue = Math.floor(Math.random() * 100);
+
+      if (data.labels.length > 10) {
+        data.labels.shift();
+        data.datasets[0].data.shift();
+      }
+
+      data.labels.push(now);
+      data.datasets[0].data.push(randomValue);
+
+      realtimeChart.update();
+    }, 2000);
+
+    // Sauvegarde des paramètres
+    function saveConfiguration() {
+      alert('Les paramètres ont été sauvegardés dans la base de données !');
+    }
+
+    // Export des données historiques
+    function exportData() {
+      alert('Les données historiques ont été exportées au format CSV !');
+    }
+  </script>
+</body>
+</html>
