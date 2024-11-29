@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   frontend:
     image: nginx:latest  # Utilise l'image officielle de Nginx pour servir les fichiers HTML/CSS/JS
