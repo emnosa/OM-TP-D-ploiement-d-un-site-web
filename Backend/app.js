@@ -61,7 +61,7 @@ const readAndInsertData = () => {
 };
 
 // Effectuer la tâche toutes les secondes
-setInterval(readAndInsertData, 1000000);  // Exécute la fonction toutes les 1000ms (1 seconde)
+setInterval(readAndInsertData, 1000);  // Exécute la fonction toutes les 1000ms (1 seconde)
 
 // Route GET pour récupérer les données
 app.get('/get-data', (req, res) => {
