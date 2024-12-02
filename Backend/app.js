@@ -10,8 +10,7 @@ const dbConfig = {
     user: "root",
     password: "root",
     database: "hackathon"
-  };
-  
+};
 
 // Connexion à la base de données avec mysql2
 const connection = mysql.createConnection(dbConfig);
@@ -27,8 +26,8 @@ connection.connect((err) => {
 
 // Connexion Modbus TCP
 const client = new ModbusRTU();
-const modbusHost = "172.16.1.23";
-const modbusPort = 502;
+const modbusHost = "172.16.1.23"; // Adresse IP de l'automate
+const modbusPort = 502; // Port Modbus TCP
 
 client.connectTCP(modbusHost, { port: modbusPort }, () => {
     console.log('Connexion Modbus TCP réussie');
@@ -38,14 +37,15 @@ client.connectTCP(modbusHost, { port: modbusPort }, () => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Route POST pour lire les données via Modbus et insérer dans la base de données
-app.get('/read-data', (req, res) => {
+// Fonction pour lire les données via Modbus et insérer dans la base de données
+const readAndInsertData = () => {
     client.readCoils(600, 25, function(err, data) {
         if (err) {
             console.error('Erreur lors de la lecture Modbus:', err);
-            return res.status(500).json({ error: 'Erreur de lecture Modbus' });
+            return;
         }
 
+        // Insertion des données dans la base de données
         for (let i = 0; i < data.data.length; i++) {
             const variable_name = `variable_${600 + i}`;
             const value = data.data[i];
@@ -57,13 +57,15 @@ app.get('/read-data', (req, res) => {
                 }
             });
         }
-        res.status(200).json({ message: 'Données lues et insérées avec succès' });
     });
-});
+};
+
+// Effectuer la tâche toutes les secondes
+setInterval(readAndInsertData, 1000000);  // Exécute la fonction toutes les 1000ms (1 seconde)
 
 // Route GET pour récupérer les données
 app.get('/get-data', (req, res) => {
-    const query = 'SELECT * FROM get-data ORDER BY timestamp DESC LIMIT 10';
+    const query = 'SELECT * FROM `read-data` ORDER BY timestamp DESC LIMIT 10';
     connection.query(query, (err, results) => {
         if (err) {
             console.error('Erreur lors de la récupération des données:', err);
