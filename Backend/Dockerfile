@@ -15,4 +15,4 @@ RUN npm install -g nodemon
 EXPOSE 5000
 
 # Commande pour démarrer l'application
-CMD ["nodemon", "app.js"]
+CMD ["nodemon","--legacy-watch", "app.js"]
