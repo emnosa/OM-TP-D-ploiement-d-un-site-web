@@ -1,63 +1,25 @@
 <!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion / Création de Profil</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f8f9fa;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .btn-primary {
-            width: 100%;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h2 class="text-center">Connexion</h2>
-        <form>
-            <div class="form-group">
-                <label for="nom">Nom</label>
-                <input type="text" class="form-control" id="nom" placeholder="Nom" required>
-            </div>
-            <div class="form-group">
-                <label for="prenom">Prénom</label>
-                <input type="text" class="form-control" id="prenom" placeholder="Prénom" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Se connecter</button>
-        </form>
-        <hr>
-        <h2 class="text-center">Créer un profil</h2>
-        <form>
-            <div class="form-group">
-                <label for="nom">Nom</label>
-                <input type="text" class="form-control" id="nom" placeholder="Nom" required>
-            </div>
-            <div class="form-group">
-                <label for="prenom">Prénom</label>
-                <input type="text" class="form-control" id="prenom" placeholder="Prénom" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Créer un profil</button>
-        </form>
-    </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Supervision Automate</title>
+    </head>
+    <body>
+        <h1>Supervision Automate</h1>
+        <button id="fetchData">Lire les données</button>
+        <table id="dataTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Variable</th>
+                    <th>Valeur</th>
+                    <th>Horodatage</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <script src="app.js"></script>
+    </body>
 </html>

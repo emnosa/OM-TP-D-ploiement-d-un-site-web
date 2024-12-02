@@ -1,15 +1,10 @@
 {
-  "name": "om-tp-d-ploiement-d-un-site-web",
+  "name": "backend",
   "version": "1.0.0",
-  "description": "Frontend : \r Possibilités d'ajout + modification de paramètres à surveiller : (mini Nom, IP Automate, Variable à lire, Fréquence d'enregistrement)\r Tableau de bord de supervision en temps réel avec freq rafraichissement définie (graphiques, chiffres, tableau, etc...)\r Possibilité d'export des données au format CSV\r Backend :\r Démarrage, backend se connecte à la BDD pour récupérer les variables, IP etc...\r Le backend lit la BDDvia la fréquence définie",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "express": "^4.21.1"
+    "express": "^4.18.2",
+    "mysql2": "^2.3.3",
+    "modbus-serial": "^8.0.0",
+    "dotenv": "^10.0.0"
   }
 }

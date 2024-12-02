@@ -1,37 +1,38 @@
+version: "3.9"
 services:
   frontend:
-    image: nginx:latest  # Utilise l'image officielle de Nginx pour servir les fichiers HTML/CSS/JS
+    image: nginx:latest
     ports:
-      - "8080:80"  # Le port 80 du conteneur est accessible via le port 8080 sur la machine hôte
+      - "8080:80"
     volumes:
-      - ./frontend:/usr/share/nginx/html  # Monte le dossier frontend de la machine hôte dans le conteneur
+      - ./frontend:/usr/share/nginx/html
     networks:
-      - hackathon_network  # Connecte le conteneur au réseau hackathon_network
+      - hackathon_network
 
   backend:
-    build: ./backend  # Construit une image personnalisée pour le backend à partir du Dockerfile dans le dossier backend
+    build: ./backend
     ports:
-      - "5000:5000"  # Expose le port 5000 du conteneur sur la machine hôte
+      - "5000:5000"
     depends_on:
-      - db  # Attend que le service db démarre avant de se lancer
+      - db
     volumes:
-      - ./backend:/app  # Partage le code source du backend entre la machine hôte et le conteneur
+      - ./backend:/app
     networks:
-      - hackathon_network  # Connecte le backend au réseau hackathon_network
+      - hackathon_network
 
   db:
-    image: mariadb  # Utilise l'image officielle de MariaDB pour la base de données
+    image: mariadb
     env_file:
-      - .env  # Utilise le fichier .env pour les variables d'environnement
+      - .env
     ports:
-      - "3307:3306"  # Expose le port 3306 (par défaut pour MariaDB) sur la machine hôte
+      - "3307:3306"
     volumes:
-      - db_data:/var/lib/mysql  # Stocke les données de la base dans le volume nommé db_data
+      - db_data:/var/lib/mysql
     networks:
-      - hackathon_network  # Connecte la base de données au réseau hackathon_network
+      - hackathon_network
 
 volumes:
-  db_data:  # Déclare un volume Docker persistant pour stocker les données de la base de données
+  db_data:
 
 networks:
-  hackathon_network:  # Déclare un réseau Docker pour permettre aux conteneurs de communiquer entre eux
+  hackathon_network:
