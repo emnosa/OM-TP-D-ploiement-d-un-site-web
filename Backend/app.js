@@ -7,8 +7,8 @@ const app = express();
 const dbConfig = {
     host: 'om-tp-d-ploiement-d-un-site-web-db-1',  // Nom du conteneur DB dans Docker
     user: 'root',  // Utilisateur de la base de données
-    password: '',  // Mot de passe (vide si aucun)
-    database: 'automate',  // Nom de la base de données
+    password: 'root',  // Mot de passe (vide si aucun)
+    database: 'hackathon',  // Nom de la base de données
 };
 
 // Connexion à la base de données avec mysql2
