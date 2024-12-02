@@ -1,4 +1,3 @@
-version: "3.9"
 services:
   frontend:
     image: nginx:latest
@@ -36,3 +35,4 @@ volumes:
 
 networks:
   hackathon_network:
+    driver: bridge

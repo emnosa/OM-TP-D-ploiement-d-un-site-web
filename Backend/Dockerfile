@@ -1,4 +1,8 @@
 FROM node:latest
+
+# Mettre à jour les sources et installer mariadb-client ou mysql-client
+RUN apt-get update && apt-get install -y mariadb-client
+
 WORKDIR /app
 
 # Copie les fichiers de package pour installer les dépendances
@@ -15,4 +19,4 @@ RUN npm install -g nodemon
 EXPOSE 5000
 
 # Commande pour démarrer l'application
-CMD ["nodemon","--legacy-watch", "app.js"]
+CMD ["nodemon", "--legacy-watch", "app.js"]
