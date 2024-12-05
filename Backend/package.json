@@ -1,22 +1,23 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "Backend application for Modbus data collection",
+  "description": "Backend pour l'application Modbus",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "mysql2": "^2.3.3",
-    "modbus-serial": "^8.0.0",
-    "dotenv": "^10.0.0"
-  },
-  "devDependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "modbus-serial": "^7.0.0",
+    "mysql2": "^3.11.5",
     "nodemon": "^3.1.7"
   },
-  "keywords": [],
-  "author": "Your Name",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "author": "OMNES NOE",
   "license": "ISC"
 }

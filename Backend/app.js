@@ -90,7 +90,7 @@ app.get('/', (req, res) => {
     res.send('L\'application backend est en fonctionnement');
 });
 
-const PORT = 3000;
+const PORT = 4000;
 app.listen(PORT, () => {
     console.log(`Serveur démarré sur le port ${PORT}`);
 });
