@@ -1,9 +1,9 @@
 document.getElementById('fetchData').addEventListener('click', async () => {
     // Appeler l'API pour lire et stocker les données
-    await fetch('http://localhost:5000/read-data');
+    await fetch('http://localhost:3000/read-data');
 
     // Appeler l'API pour récupérer les données
-    const response = await fetch('http://localhost:5000/get-data');
+    const response = await fetch('http://localhost:3000/get-data');
     const data = await response.json();
 
     // Insérer les données dans le tableau

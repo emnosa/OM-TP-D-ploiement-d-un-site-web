@@ -3,6 +3,7 @@ require('dotenv').config();  // Charge le fichier .env
 const express = require('express');
 const mysql = require('mysql2');
 const ModbusRTU = require("modbus-serial");
+const cors = require('cors');  // Importer le package CORS
 const app = express();
 
 const dbConfig = {
@@ -32,6 +33,9 @@ const modbusPort = 502; // Port Modbus TCP
 client.connectTCP(modbusHost, { port: modbusPort }, () => {
     console.log('Connexion Modbus TCP réussie');
 });
+
+// Activer CORS pour toutes les requêtes (ou spécifier des origines spécifiques)
+app.use(cors());  // Active CORS
 
 // Middleware pour gérer les requêtes POST avec JSON
 app.use(express.json());
@@ -86,7 +90,7 @@ app.get('/', (req, res) => {
     res.send('L\'application backend est en fonctionnement');
 });
 
-const PORT = 5000;
+const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`Serveur démarré sur le port ${PORT}`);
 });

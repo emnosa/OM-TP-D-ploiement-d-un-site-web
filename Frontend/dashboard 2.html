@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Graphiques</title>
+    <!-- Ajouter Bootstrap pour le style -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="container mt-4">
+    <h2 class="text-center">Visualisation des Variables Modbus</h2>
+
+    <!-- Formulaire pour ajouter/éditer une variable -->
+    <div class="mb-4">
+        <h5>Ajouter/Modifier une variable</h5>
+        <form id="addVariableForm">
+            <div class="mb-3">
+                <label for="variableAddress" class="form-label">Adresse de la variable (%M)</label>
+                <input type="number" id="variableAddress" class="form-control" min="600" max="625" required>
+            </div>
+            <div class="mb-3">
+                <label for="refreshRate" class="form-label">Fréquence de rafraîchissement (en secondes)</label>
+                <input type="number" id="refreshRate" class="form-control" min="1" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Ajouter/Modifier la variable</button>
+        </form>
+    </div>
+
+    <!-- Conteneur pour les graphiques dynamiques -->
+    <div id="chartsContainer" class="row mt-4">
+        <!-- Les graphiques seront ajoutés ici dynamiquement -->
+    </div>
+</div>
+
+<script>
+    let variablesToDisplay = [];  // Tableau pour stocker les variables à afficher
+
+    // Fonction pour ajouter/mettre à jour une variable
+    document.getElementById("addVariableForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        const variableAddress = parseInt(document.getElementById("variableAddress").value);
+        const refreshRate = parseInt(document.getElementById("refreshRate").value) * 1000;  // Convertir en millisecondes
+
+        // Vérification si la variable existe déjà
+        if (!variablesToDisplay.some(v => v.address === variableAddress)) {
+            variablesToDisplay.push({ address: variableAddress, rate: refreshRate });
+            fetchDataAndUpdateCharts();
+        } else {
+            alert("Cette variable est déjà ajoutée.");
+        }
+
+        // Réinitialiser le formulaire
+        document.getElementById("addVariableForm").reset();
+    });
+
+    // Fonction pour récupérer et afficher les graphiques dynamiquement
+    function fetchDataAndUpdateCharts() {
+        // Effacer les anciens graphiques à chaque cycle
+        const chartsContainer = document.getElementById("chartsContainer");
+        chartsContainer.innerHTML = '';
+
+        variablesToDisplay.forEach(variable => {
+            // Récupérer les données pour chaque variable spécifiée
+            fetch(`http://localhost:5000/get-data?variable_address=${variable.address}`)
+                .then(response => response.json())
+                .then(data => {
+                    const modbusData = data.data;
+
+                    // Créer un graphique pour chaque variable
+                    const chartDiv = document.createElement("div");
+                    chartDiv.className = "col-md-6 col-lg-4 mt-4";
+                    chartDiv.innerHTML = `
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Variable %M${variable.address}</h5>
+                                <canvas id="chart-${variable.address}"></canvas>
+                            </div>
+                        </div>
+                    `;
+                    chartsContainer.appendChild(chartDiv);
+
+                    const ctx = document.getElementById(`chart-${variable.address}`).getContext("2d");
+                    const chart = new Chart(ctx, {
+                        type: "line",
+                        data: {
+                            labels: [],
+                            datasets: [{
+                                label: `Variable %M${variable.address}`,
+                                data: [],
+                                borderColor: "rgba(75, 192, 192, 1)",
+                                borderWidth: 2
+                            }]
+                        },
+                        options: {
+                            responsive: true
+                        }
+                    });
+
+                    // Mettre à jour les données du graphique
+                    modbusData.forEach(entry => {
+                        chart.data.labels.push(new Date(entry.timestamp).toLocaleTimeString());
+                        chart.data.datasets[0].data.push(entry.value);
+                    });
+                    chart.update();
+
+                    // Mettre à jour les données toutes les X secondes (en fonction de la fréquence de rafraîchissement)
+                    setInterval(() => {
+                        fetch(`http://localhost:3000/get-data?variable_address=${variable.address}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                const modbusData = data.data;
+                                const newEntry = modbusData[modbusData.length - 1];
+                                chart.data.labels.push(new Date(newEntry.timestamp).toLocaleTimeString());
+                                chart.data.datasets[0].data.push(newEntry.value);
+                                chart.update();
+                            })
+                            .catch(err => console.error("Erreur lors de la récupération des données :", err));
+                    }, variable.rate);
+                })
+                .catch(err => console.error("Erreur lors de la récupération des données :", err));
+        });
+    }
+
+    // Initialiser la fonction au démarrage
+    fetchDataAndUpdateCharts();
+
+</script>
+
+</body>
+</html>

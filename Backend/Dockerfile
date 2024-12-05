@@ -15,8 +15,8 @@ COPY . .
 # Installe nodemon pour le développement
 RUN npm install -g nodemon
 
-# Expose le port 5000
-EXPOSE 5000
+# Expose le port 3000
+EXPOSE 3000
 
 # Commande pour démarrer l'application
 CMD ["nodemon", "--legacy-watch", "app.js"]
