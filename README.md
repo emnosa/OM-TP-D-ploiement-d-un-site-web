@@ -1,8 +1,12 @@
-# OM-TP-Deploiement-site-web
-Frontend : 
-Possibilités d'ajout + modification de paramètres à surveiller : (mini Nom, IP Automate, Variable à lire, Fréquence d'enregistrement)
-Tableau de bord de supervision en temps réel avec freq rafraichissement définie (graphiques, chiffres, tableau, etc...)
-Possibilité d'export des données au format CSV
-Backend :
-Démarrage, backend se connecte à la BDD pour récupérer les variables, IP etc...
-Le backend lit la BDDvia la fréquence définie
+# Solution de suivi de données industrielles
+ 
+## Description
+Ce projet propose une solution de supervision flexible et modulaire pour les processus industriels. Il permet de surveiller en temps réel des variables critiques (comme la température, la pression) via une interface web, avec des données collectées automatiquement depuis des automates industriels (PLCs). L'application est conçue pour être indépendante, flexible et économique, en utilisant des technologies open source et des conteneurs Docker.
+ 
+## Technologies Utilisées
+- **Frontend** : HTML, JavaScript, Bootstrap, Chart.js
+- **Backend** : Node.js, Express.js
+- **Base de données** : MariaDB
+- **Docker** : Docker, Docker Compose
+- **Outils de développement** : Visual Studio, Git, GitHub
+- **Librairies utiles** : Nodemon, Modbus Serial, Node-cron, Export-to-CSV, Dotenv

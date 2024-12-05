@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historique des Données</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --main-blue: #007bff;
+        }
+
+        .navbar {
+            background-color: var(--main-blue);
+        }
+
+        .navbar-brand, .nav-link {
+            color: white !important;
+        }
+
+        .navbar-brand:hover, .nav-link:hover {
+            color: #e0e0e0 !important;
+        }
+
+        .btn-primary {
+            background-color: var(--main-blue);
+            border-color: var(--main-blue);
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+
+        .card-body {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Barre de navigation -->
+<nav class="navbar navbar-expand-lg navbar-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="accueil.html">Dashboard Modbus</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="accueil.html">Accueil</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="dashboard 2.html">Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="historique.html">Historique</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Contenu principal -->
+<div class="container mt-4">
+    <h2 class="text-center">Historique des Données</h2>
+
+    <!-- Filtres -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <label for="startDate" class="form-label">Date et Heure de début</label>
+            <input type="datetime-local" id="startDate" class="form-control">
+        </div>
+        <div class="col-md-4">
+            <label for="endDate" class="form-label">Date et Heure de fin</label>
+            <input type="datetime-local" id="endDate" class="form-control">
+        </div>
+        <div class="col-md-4">
+            <label for="variableFilter" class="form-label">Filtrer par variable</label>
+            <select id="variableFilter" class="form-select">
+                <option value="">Toutes les variables</option>
+                <!-- Les options seront ajoutées dynamiquement -->
+            </select>
+        </div>
+    </div>
+
+    <!-- Bouton d'export CSV -->
+    <div class="text-center mb-4">
+        <button id="exportCSV" class="btn btn-primary">Exporter en CSV</button>
+    </div>
+
+    <!-- Table pour afficher l'historique -->
+    <div class="card">
+        <div class="card-body">
+            <table id="historyTable" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Automate ID</th>
+                        <th>Adresse Variable</th>
+                        <th>Valeur</th>
+                        <th>Status</th>
+                        <th>Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Les données seront ajoutées ici -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Script Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+<!-- Script pour gérer l'exportation en CSV -->
+<script>
+    let allData = [];  // Pour stocker toutes les données récupérées
+
+    // Fonction pour télécharger les données au format CSV
+    function downloadCSV(data) {
+        const csvRows = [];
+        // Créer l'en-tête
+        const headers = ["Automate ID", "Adresse Variable", "Valeur", "Status", "Timestamp"];
+        csvRows.push(headers.join(','));
+
+        // Ajouter les données
+        data.forEach(row => {
+            const csvRow = [
+                row.automate_id,
+                row.variable_address,
+                row.value,
+                row.status,
+                new Date(row.timestamp).toLocaleString()
+            ];
+            csvRows.push(csvRow.join(','));
+        });
+
+        // Créer un lien de téléchargement
+        const csvData = new Blob([csvRows.join('\n')], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(csvData);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'historique_donnees.csv'; // Nom du fichier
+        a.click();
+        window.URL.revokeObjectURL(url);
+    }
+
+    // Fonction pour filtrer et afficher les données dans le tableau
+    function displayData() {
+        const tableBody = document.getElementById("historyTable").getElementsByTagName('tbody')[0];
+        const variableFilter = document.getElementById("variableFilter").value;
+        const startDate = document.getElementById("startDate").value;
+        const endDate = document.getElementById("endDate").value;
+
+        // Réinitialiser la table
+        tableBody.innerHTML = '';
+
+        // Filtrer les données
+        const filteredData = allData.filter(row => {
+            // Convertir le timestamp en Date
+            const rowDate = new Date(row.timestamp);
+            const rowDateStr = rowDate.toISOString().slice(0, 16); // Format "YYYY-MM-DDTHH:mm"
+            
+            // Vérification du filtre sur la date
+            const isInDateRange = (!startDate || rowDateStr >= startDate) && (!endDate || rowDateStr <= endDate);
+            const isMatchingVariable = !variableFilter || row.variable_address === variableFilter;
+
+            return isInDateRange && isMatchingVariable;
+        });
+
+        // Ajouter les lignes filtrées au tableau
+        filteredData.forEach(row => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${row.automate_id}</td>
+                <td>${row.variable_address}</td>
+                <td>${row.value}</td>
+                <td>${row.status}</td>
+                <td>${new Date(row.timestamp).toLocaleString()}</td>
+            `;
+            tableBody.appendChild(tr);
+        });
+    }
+
+    // Récupérer les données de l'historique depuis le backend
+    function fetchHistoryData() {
+        fetch('http://localhost:4000/get-data')  // Ajuste cette URL si nécessaire
+            .then(response => response.json())
+            .then(data => {
+                allData = data.data;  // Stocker toutes les données récupérées
+                displayData();  // Afficher les données initiales
+            })
+            .catch(err => console.error("Erreur lors de la récupération des données :", err));
+    }
+
+    // Charger les variables disponibles dans le filtre
+    function loadVariableFilter() {
+        const variableFilter = document.getElementById("variableFilter");
+        const variables = [
+            { address: "602", name: "VoyColVert" },
+            { address: "603", name: "VoyColRouge" },
+            { address: "604", name: "VoyColOrange" },
+            // Ajoute d'autres variables ici...
+        ];
+
+        variables.forEach(variable => {
+            const option = document.createElement("option");
+            option.value = variable.address;
+            option.textContent = `${variable.name} (%M${variable.address})`;
+            variableFilter.appendChild(option);
+        });
+    }
+
+    // Gestion de l'exportation en CSV
+    document.getElementById("exportCSV").addEventListener("click", function() {
+        downloadCSV(allData);
+    });
+
+    // Ajouter des écouteurs d'événements pour les filtres
+    document.getElementById("startDate").addEventListener("change", displayData);
+    document.getElementById("endDate").addEventListener("change", displayData);
+    document.getElementById("variableFilter").addEventListener("change", displayData);
+
+    // Charger les données au démarrage
+    loadVariableFilter();
+    fetchHistoryData();
+</script>
+
+</body>
+</html>

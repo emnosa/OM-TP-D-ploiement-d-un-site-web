@@ -85,6 +85,19 @@ app.get('/get-data', (req, res) => {
     });
 });
 
+// Route GET pour récupérer les données historiques depuis la table `read-data`
+app.get('/get-history', (req, res) => {
+    const query = 'SELECT * FROM `read-data` ORDER BY timestamp DESC LIMIT 100';  // Sélectionner les dernières 100 entrées
+    connection.query(query, (err, results) => {
+        if (err) {
+            console.error('Erreur lors de la récupération des données historiques:', err);
+            return res.status(500).json({ error: 'Erreur lors de la récupération des données' });
+        }
+        res.status(200).json({ data: results });
+    });
+});
+
+
 // Route pour tester la connexion
 app.get('/', (req, res) => {
     res.send('L\'application backend est en fonctionnement');

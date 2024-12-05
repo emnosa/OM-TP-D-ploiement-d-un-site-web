@@ -11,7 +11,7 @@ services:
   backend:
     build: ./backend
     ports:
-      - "3000:3000"
+      - "4000:4000"
     depends_on:
       - db
     volumes:
@@ -21,8 +21,6 @@ services:
 
   db:
     image: mariadb
-    env_file:
-      - .env
     ports:
       - "3307:3306"
     volumes:
