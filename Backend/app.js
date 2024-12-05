@@ -45,12 +45,16 @@ const readAndInsertData = () => {
             return;
         }
 
-        // Insertion des données dans la base de données
+        // Insertion ou remplacement des données dans la base de données avec REPLACE INTO
         for (let i = 0; i < data.data.length; i++) {
             const variable_name = `variable_${600 + i}`;
             const value = data.data[i];
 
-            const query = "INSERT INTO `read-data` (automate_id, variable_address, value, status) VALUES (?, ?, ?, ?)";
+            // Utilisation de REPLACE INTO pour remplacer les anciennes données si elles existent
+            const query = `
+                REPLACE INTO \`read-data\` (automate_id, variable_address, value, status)
+                VALUES (?, ?, ?, ?);
+            `;
             connection.query(query, [1, 600 + i, value, 'OK'], (err, result) => {
                 if (err) {
                     console.error('Erreur lors de l\'insertion dans la base de données:', err);
@@ -59,6 +63,8 @@ const readAndInsertData = () => {
         }
     });
 };
+
+
 
 // Effectuer la tâche toutes les secondes
 setInterval(readAndInsertData, 1000);  // Exécute la fonction toutes les 1000ms (1 seconde)
